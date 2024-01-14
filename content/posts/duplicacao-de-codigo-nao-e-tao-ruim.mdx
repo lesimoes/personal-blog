@@ -1,0 +1,36 @@
+---
+title: Duplicação de código não é tão ruim assim
+description: excesso de complexidade é ainda pior...
+date: '2024-01-14'
+---
+
+Nesse artigo vou explicar porque **você não precisa evitar duplicação de código a todo custo** e como isso pode te levar a um problema ainda mais grave: Excesso de complexidade/abstração.
+
+## Um problema ainda maior
+
+Se tem uma habilidade que ainda não aprendemos é prever o futuro, usamos estatística, sexto sentido, achismo, tarô, scrum e uma variedade de técnicas para tentar prever o futuro. Lembramos muito bem quando acertamos mas esquecemos quando erramos, acho que isso causa aquela sensação de que somos bons em prever o futuro, mas não somos!
+
+Quando estamos escrevendo um novo módulo, componente, classe, normalmente tentamos prever o futuro: _Será que vamos usar isso em outro lugar? E se mais alguém da minha equipe quiser usar algo parecido?_
+Nesse momento a pessoa, muito bem intensionada, resolve abstrair aquele módulo, isto é, abandonar o caso de uso no qual aquele módulo deve tratar e tratar outros **possíveis** casos de uso. _**Spoiler!**_ Não vai rolar!
+
+## Excesso de complexidade/abstração
+
+Um módulo que devia tratar um caso de uso passa a tratar vários, porém só aqueles que a pessoa conseguiu imaginar. O resultado disso é um módulo cheio de abstração desnecessária, complexo, com o tempo aquele módulo começa a ganhar mais responsabilidade (casos de uso), em classes você vê aumentando a quantidade de funções que não interagem com propriedades, em componentes react você vê a quantidade de props opcionais aumentando.
+
+Em pouco tempo aquele módulo deixa de ser reutilizável (se é que um dia foi) para se tornar algo complexo e específico, algo que ninguém que mexer porque não entende muito bem como ele funciona e quais os casos de uso que ele resolve. **Resultado:** Vão criar outro módulo parecido, mas menos prepotente, que trata apenas um caso de uso, algumas vezes inclusive até mesmo o caso de uso inicial.
+
+Já ví isso acontecer muitas vezes, a intenção é boa, deixar o código limpo sem duplicação, porém o resultado é desastroso, excesso de complexidade, baixa coesão e por fim, repetição desnecessária.
+
+## Não tente prever o futuro
+
+Software que se adapta as necessidades é melhor do que software que tenta preve o futuro. Quando escrevo um módulo penso apenas naquele caso de uso específico, quero que meu módulo resolva bem um único problema (e isso não é princípio de responsabilidade única - SRP), se eu sei que aquele módulo será reutilizável mantenho o mesmo princípio, ele vai resolver bem um único problema. Penso que se ele é reutilizável então aquele caso de uso aparece em diversos lugares no software.
+
+Muitas vezes não estamos escrevendo um framework ou uma lib para diversos casos de uso, estamos escrevendo módulos que serão usados em um software para um tipo de cliente. Por exemplo em React, escrevemos um componente de sidebar para o software X do cliente Z, e não um componente sidebar para todos os software e todos os clientes possíveis.
+
+Principalmente nas fases iniciais do software evito ao máximo tentar generalizar casos de uso, a menos que eles sejam iguais como definição de negócio, do contrário assumo que eles parecem iguais.
+
+No geral tenho em mente uma regrinha do livro **Refatoração** (Martin Fowler):
+
+> Escrevo a primeira vez, escrevo a segunda torçendo o nariz, na terceira eu refatoro.
+
+Duplicação de código ainda é um problema e devemos evita-lo porém acredito que até certo nível é tolerável, o resultado de evita-lo a **todo custo** pode ser ainda pior.

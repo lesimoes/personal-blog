@@ -1,4 +1,6 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files"
+import highlight from 'rehype-highlight'
+import rehypePrettyCode from 'rehype-pretty-code';
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
 const computedFields = {
@@ -51,4 +53,5 @@ export const Post = defineDocumentType(() => ({
 export default makeSource({
   contentDirPath: "./content",
   documentTypes: [Post, Page],
+  mdx: { rehypePlugins: [rehypePrettyCode] }
 })
