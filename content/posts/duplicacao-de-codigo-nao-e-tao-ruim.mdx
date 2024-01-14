@@ -1,7 +1,8 @@
 ---
 title: Duplicação de código não é tão ruim assim
 description: excesso de complexidade é ainda pior...
-date: '2024-01-14'
+date: '2024-01-13'
+tags: ['engenharia de software']
 ---
 
 Nesse artigo vou explicar porque **você não precisa evitar duplicação de código a todo custo** e como isso pode te levar a um problema ainda mais grave: Excesso de complexidade/abstração.
@@ -23,7 +24,7 @@ Já ví isso acontecer muitas vezes, a intenção é boa, deixar o código limpo
 
 ## Não tente prever o futuro
 
-Software que se adapta as necessidades é melhor do que software que tenta preve o futuro. Quando escrevo um módulo penso apenas naquele caso de uso específico, quero que meu módulo resolva bem um único problema (e isso não é princípio de responsabilidade única - SRP), se eu sei que aquele módulo será reutilizável mantenho o mesmo princípio, ele vai resolver bem um único problema. Penso que se ele é reutilizável então aquele caso de uso aparece em diversos lugares no software.
+Software que se adapta as necessidades é melhor do que software que tenta prever o futuro. Quando escrevo um módulo penso apenas naquele caso de uso específico, quero que meu módulo resolva bem um único problema (e isso não é princípio de responsabilidade única - SRP), se eu sei que aquele módulo será reutilizável mantenho o mesmo princípio, ele vai resolver bem um único problema. Penso que se ele é reutilizável então aquele caso de uso aparece em diversos lugares no software.
 
 Muitas vezes não estamos escrevendo um framework ou uma lib para diversos casos de uso, estamos escrevendo módulos que serão usados em um software para um tipo de cliente. Por exemplo em React, escrevemos um componente de sidebar para o software X do cliente Z, e não um componente sidebar para todos os software e todos os clientes possíveis.
 

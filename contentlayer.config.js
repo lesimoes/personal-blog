@@ -1,5 +1,4 @@
-import { defineDocumentType, makeSource } from "contentlayer/source-files"
-import highlight from 'rehype-highlight'
+import { defineDocumentType, defineNestedType, makeSource } from "contentlayer/source-files"
 import rehypePrettyCode from 'rehype-pretty-code';
 
 /** @type {import('contentlayer/source-files').ComputedFields} */
@@ -46,12 +45,54 @@ export const Post = defineDocumentType(() => ({
       type: "date",
       required: true,
     },
+    tags: {
+      type: "list",
+      required: false,
+      of: Tags,
+    },
+    series: {
+      type: "nested",
+      required: false,
+      of: Series,
+    },
   },
   computedFields,
 }))
 
+export const Tags = defineDocumentType(() => ({
+  name: "Tags",
+  fields: {
+    title: {
+      type: "enum",
+      required: true,
+    },
+    slug: {
+      type: "enum",
+      required: true,
+    },
+  }
+}))
+
+export const Series = defineNestedType(() => ({
+  name: "Series",
+  fields: {
+    title: {
+      type: "string",
+      required: true,
+    },
+    order: {
+      type: "number",
+      required: true,
+    },
+  },
+}));
+
 export default makeSource({
   contentDirPath: "./content",
   documentTypes: [Post, Page],
-  mdx: { rehypePlugins: [rehypePrettyCode] }
+  mdx: {
+    rehypePlugins: [rehypePrettyCode, {
+      filterMetaString: (string) => string.replace(/filename="[^"]*"/, "")
+    }]
+  }
 })

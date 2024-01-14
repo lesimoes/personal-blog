@@ -1,0 +1,168 @@
+---
+title: Objetos em Javascript e React
+description: Nesse artigo vou te mostrar um "segredo" de objetos em javascript e como não saber disso limita seu conhecimento sobre states.
+date: '2024-01-14'
+tags: ['react', 'javascript']
+---
+
+## Assunto chato
+
+Passei anos ensinando React em cursos livres e universidades, além de outros tantos anos ensinando e auxiliando iniciantes nas empresas em que trabalhei. Desde então alguns erros me parecem bem constantes, alguns por conta da complexidade do React, outros por falta de base de Javascript. No final do dia React ainda é Javascript e creio ser necessário dominar ambos, mas me parece que conteúdo mais teórico, ou sem uma aplicação prática imediata não gera engajamento.
+
+Parece que é muito mais descolado tacar um _useMemo_ e sair falando _memoização_ do que entender como de fato as coisas funcionam.
+
+## O cenário
+
+Vamos começar com dois códigos de exemplo, sugiro aqui que você pare um tempo para ler cada código e executa-lo de cabeça, faça um exercício mental para visualizar a saída de cada um deles.
+
+```jsx title="Count1.jsx"
+// codigo1
+function Count1() {
+  const inicial = [1, 2, 3];
+  const [contador, setContador] = useState(1);
+  const [lista, setLista] = useState(inicial);
+
+  function mudarTudao() {
+    inicial.push(4);
+    setContador(2);
+    setLista(inicial);
+  }
+
+  return (
+    <div>
+      <span>Contador: {contador}</span>
+      <ul>{lista && lista.map((v, i) => <li key={i}>{v}</li>)}</ul>
+      <button onClick={mudarTudao}>Mudar tudão</button>
+    </div>
+  );
+}
+```
+
+```jsx title="Count2.jsx" /setContador(2)/ {1-3} shownLineNumber
+function Count2() {
+  const inicial = [1, 2, 3];
+  const [contador, setContador] = useState(1);
+  const [lista, setLista] = useState(inicial);
+
+  function mudarTudao() {
+    inicial.push(4);
+    //setContador(2);
+    setLista(inicial);
+  }
+
+  return (
+    <div>
+      <span>Contador: {contador}</span>
+      <ul>{lista && lista.map((v, i) => <li key={i}>{v}</li>)}</ul>
+      <button onClick={mudarTudao}>Mudar tudão</button>
+    </div>
+  );
+}
+```
+
+A diferença escrita entre os códigos é **apenas** a linha 9. Porém a diferença de saída é muito maior, enquanto o **Count1** vai renderizar uma lista de 1 ao 4, o **Count2** não, ele irá manter a renderização inicial da lista de 1 ao 3.
+
+Você pode conferir [aqui](https://codesandbox.io/p/devbox/inspiring-leakey-9dghhm?file=%2Fsrc%2FApp.js%3A8%2C1)
+
+Faça um exercício mental e tente descobrir o porquê disso.
+
+## Vamos voltar um pouco
+
+Para explicar o problema primeiro precisamos voltar um pouco (confia!), temos que entender um pouco sobre valores **primitivos** e **não primitivos** em Javascript.
+
+### Valores primitivos
+
+Valores (ou tipos) não primitivos são aqueles que não são objetos e não possuem métodos ou propriedades.
+
+- string
+- number
+- bigint
+- boolean
+- undefined
+- symbol
+- null
+
+Todos os primitivos são imutáveis, ou seja, eles não podem ser alterados! Note estamos falando do valor primitivo e não de uma variável que recebe esse valor.
+
+```js
+let valor = 2;
+valor = 3;
+```
+
+Esse código atribui valores para a variável _valor_, logo a variável muda de estado duas vezes. **Guarde essa informação!**
+
+### Valores não primitivos
+
+Em Javascript valores não primitivos (objetos e arrays) são mutáveis, podemos ver isso no código a seguir. Conseguimos mudar valores de propriedades e métodos. Note que usamos _const_.
+
+```js
+const pessoa = {
+  nome: 'Irmão do Jorel',
+};
+pessoa.nome = 'Vovo Juju';
+```
+
+O que o _const_ faz é impossibilitar reatribuição de valores, ou seja, podemos considerar que torna tipos não primitivos imutáveis. Note que o próximo código irá disparar um erro.
+
+```js
+const pessoa = {
+  nome: 'Irmão do Jorel',
+};
+pessoa = { nome: 'Vovo Juju' };
+```
+
+Antes conseguimos alterar a propriedade _nome_ pois ela é um primitivo.
+
+## A explicação
+
+Resumo da ópera, variáveis de valores primitivos tem valores imutáveis, por isso sempre que atribuimos um novo valor ela muda de estado para aquele novo valor.
+
+Objetos e Arrays (tipos não primitivos) são mutáveis, porém _const_ bloqueia sua reatribuição de valor, impossibilitanto sua alteração de estado.
+
+Sendo assim nos dois códigos apresentados no início a linha dispara uma alteração de estado para uma variável de estado do React, ou seja, não é condição necessário para re-renderizar o componente.
+
+```jsx
+function mudarTudao() {
+  inicial.push(4);
+  //setContador(2);
+  setLista(inicial);
+}
+```
+
+Porém em _Count1_ temos a linha 3 que muda o estado da variável de estado _inicial_, que é uma condiz necessária para disparar a re-renderização do componente. Na fase de re-renderização React lê os novos valores e atualiza a variável _lista_.
+
+Note que o valor de _lista_ é alterado em ambos os casos, porém em _Count2_ como não há reatribuição de valores o React "não sabe" que precisa re-renderizar.
+
+```jsx
+function mudarTudao() {
+  inicial.push(4);
+  setContador(2);
+  setLista(inicial);
+}
+```
+
+Você pode entrar [aqui](https://codesandbox.io/p/devbox/inspiring-leakey-9dghhm?file=%2Fsrc%2FApp.js%3A8%2C1) e alterar _const_ para _let_ e observar que o comportamento é completamente diferente.
+
+## A solução
+
+E é por isso que em React quando queremo alterar o estado de um Objeto ou Array fazemos assim:
+
+```jsx
+function mudarTudao() {
+  inicial.push(4);
+  setLista([...inicial]);
+}
+```
+
+O _spread operator_ cria uma nova variável com todos os valores da original, sendo assim mudamos o estado da vairável _lista_ vai _setLista_. Podemos inferir também que isso ocorre porque em Javascript parâmetros são referências e com spread criamos uma nova referência.
+
+Sim, voltamos atrás para explicar uma prática trivial em React mas agora acredito que você entende o porquê disso e ainda aprendeu um pouco mais sobre Javascript.
+
+### Referências
+
+##### Acessadas em: 14/01/2024
+
+[Primitive](https://developer.mozilla.org/en-US/docs/Glossary/Primitive)<br />
+[Object](https://developer.mozilla.org/en-US/docs/Glossary/Object)<br />
+[Mutable](https://developer.mozilla.org/en-US/docs/Glossary/Mutable)<br />
+[const](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
