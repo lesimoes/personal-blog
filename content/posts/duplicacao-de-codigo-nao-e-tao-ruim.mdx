@@ -1,7 +1,7 @@
 ---
 title: Duplicação de código não é tão ruim assim
 description: excesso de complexidade é ainda pior...
-date: '2024-01-13'
+date: '2024-01-15'
 tags: ['engenharia de software']
 ---
 
@@ -16,7 +16,7 @@ Nesse momento a pessoa, muito bem intensionada, resolve abstrair aquele módulo,
 
 ## Excesso de complexidade/abstração
 
-Um módulo que devia tratar um caso de uso passa a tratar vários, porém só aqueles que a pessoa conseguiu imaginar. O resultado disso é um módulo cheio de abstração desnecessária, complexo, com o tempo aquele módulo começa a ganhar mais responsabilidade (casos de uso), em classes você vê aumentando a quantidade de funções que não interagem com propriedades, em componentes react você vê a quantidade de props opcionais aumentando.
+Um módulo que devia tratar um caso de uso passa a tratar vários, porém só aqueles que a pessoa conseguiu imaginar. O resultado disso é um módulo cheio de abstração desnecessária, complexo, com o tempo aquele módulo começa a ganhar mais responsabilidade (casos de uso), em classes você vê aumentando a quantidade de funções que não interagem com propriedades, em componentes React você vê a quantidade de props opcionais aumentando.
 
 Em pouco tempo aquele módulo deixa de ser reutilizável (se é que um dia foi) para se tornar algo complexo e específico, algo que ninguém que mexer porque não entende muito bem como ele funciona e quais os casos de uso que ele resolve. **Resultado:** Vão criar outro módulo parecido, mas menos prepotente, que trata apenas um caso de uso, algumas vezes inclusive até mesmo o caso de uso inicial.
 
@@ -24,9 +24,11 @@ Já ví isso acontecer muitas vezes, a intenção é boa, deixar o código limpo
 
 ## Não tente prever o futuro
 
-Software que se adapta as necessidades é melhor do que software que tenta prever o futuro. Quando escrevo um módulo penso apenas naquele caso de uso específico, quero que meu módulo resolva bem um único problema (e isso não é princípio de responsabilidade única - SRP), se eu sei que aquele módulo será reutilizável mantenho o mesmo princípio, ele vai resolver bem um único problema. Penso que se ele é reutilizável então aquele caso de uso aparece em diversos lugares no software.
+Software que se adapta as necessidades é melhor do que software que tenta prever o futuro. Quando escrevo um módulo penso apenas naquele caso de uso específico, quero que meu módulo resolva bem um único problema, mantenho em mente os motivos de mudança daquele módulo (SRP), quero que minhas funções internas usem boa parte das suas propriedades, mantendo alta coesão.
 
-Muitas vezes não estamos escrevendo um framework ou uma lib para diversos casos de uso, estamos escrevendo módulos que serão usados em um software para um tipo de cliente. Por exemplo em React, escrevemos um componente de sidebar para o software X do cliente Z, e não um componente sidebar para todos os software e todos os clientes possíveis.
+Se eu sei que aquele módulo pode ser reutilizável avalio como vou fazer isso (OCP), em React posso usar children props, aplicar State Reducer Pattern, Component Composition ou crio um componente _"Wrapper"_ que admite configurações e renderiza componentes mais fechados.
+
+Muitas vezes não estamos escrevendo um framework ou uma lib para diversos casos de uso, estamos escrevendo módulos que serão usados em um software para um tipo de cliente. Por exemplo em React, escrevemos um componente de sidebar para o software X do cliente Z, e não um componente sidebar para para todos os softwares da empresa.
 
 Principalmente nas fases iniciais do software evito ao máximo tentar generalizar casos de uso, a menos que eles sejam iguais como definição de negócio, do contrário assumo que eles parecem iguais.
 
