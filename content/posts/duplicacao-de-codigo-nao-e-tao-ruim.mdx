@@ -1,11 +1,11 @@
 ---
-title: Duplicação de código não é tão ruim assim
-description: excesso de complexidade é ainda pior...
+title: Abstração exagerada é pior que duplicação de código
+description: Duplicação de código é ruim, porém existem coisas piores, como macarronese e abastração exagerada...
 date: '2024-01-15'
 tags: ['engenharia de software']
 ---
 
-Nesse artigo vou explicar porque **você não precisa evitar duplicação de código a todo custo** e como isso pode te levar a um problema ainda mais grave: Excesso de complexidade/abstração.
+Nesse artigo vou explicar porque **evitar duplicação de código a todo custo** pode te levar a um problema ainda mais grave: Abstração exagerada.
 
 ## Um problema ainda maior
 
@@ -14,13 +14,15 @@ Se tem uma habilidade que ainda não aprendemos é prever o futuro, usamos estat
 Quando estamos escrevendo um novo módulo, componente, classe, normalmente tentamos prever o futuro: _Será que vamos usar isso em outro lugar? E se mais alguém da minha equipe quiser usar algo parecido?_
 Nesse momento a pessoa, muito bem intensionada, resolve abstrair aquele módulo, isto é, abandonar o caso de uso no qual aquele módulo deve tratar e tratar outros **possíveis** casos de uso. _**Spoiler!**_ Não vai rolar!
 
-## Excesso de complexidade/abstração
+## Abstração exagerada
 
-Um módulo que devia tratar um caso de uso passa a tratar vários, porém só aqueles que a pessoa conseguiu imaginar. O resultado disso é um módulo cheio de abstração desnecessária, complexo, com o tempo aquele módulo começa a ganhar mais responsabilidade (casos de uso), em classes você vê aumentando a quantidade de funções que não interagem com propriedades, em componentes React você vê a quantidade de props opcionais aumentando.
+Abstração exagerada ou _over-engineering_ **é quando você resolve um problema que não existe!**
+
+Um módulo que devia tratar um caso de uso passa a tratar vários casos, imagináveis. O resultado disso é um módulo cheio de abstração desnecessária e complexo. Com o tempo aquele módulo começa a ganhar mais responsabilidades (casos de uso), em classes você vê aumentando a quantidade de funções que não interagem com propriedades, em componentes React você vê a quantidade de props opcionais aumentando.
 
 Em pouco tempo aquele módulo deixa de ser reutilizável (se é que um dia foi) para se tornar algo complexo e específico, algo que ninguém que mexer porque não entende muito bem como ele funciona e quais os casos de uso que ele resolve. **Resultado:** Vão criar outro módulo parecido, mas menos prepotente, que trata apenas um caso de uso, algumas vezes inclusive até mesmo o caso de uso inicial.
 
-Já ví isso acontecer muitas vezes, a intenção é boa, deixar o código limpo sem duplicação, porém o resultado é desastroso, excesso de complexidade, baixa coesão e por fim, repetição desnecessária.
+Já ví isso acontecer muitas vezes, a intenção é boa, deixar o código limpo sem duplicação, porém o resultado é desastroso, excesso de complexidade, manutenção custosa e medo na equipe. Até que alguém vai criar um módulo similar menos prepotente. Por fim irão coexistir a versão simples, que provavelmente será reutilizada e a versão legada que ninguém vai ter coragem de meter a mão.
 
 ## Não tente prever o futuro
 
@@ -30,10 +32,18 @@ Se eu sei que aquele módulo pode ser reutilizável avalio como vou fazer isso (
 
 Muitas vezes não estamos escrevendo um framework ou uma lib para diversos casos de uso, estamos escrevendo módulos que serão usados em um software para um tipo de cliente. Por exemplo em React, escrevemos um componente de sidebar para o software X do cliente Z, e não um componente sidebar para para todos os softwares da empresa.
 
-Principalmente nas fases iniciais do software evito ao máximo tentar generalizar casos de uso, a menos que eles sejam iguais como definição de negócio, do contrário assumo que eles parecem iguais.
-
 No geral tenho em mente uma regrinha do livro **Refatoração** (Martin Fowler):
 
 > Escrevo a primeira vez, escrevo a segunda torçendo o nariz, na terceira eu refatoro.
 
-Duplicação de código ainda é um problema e devemos evita-lo porém acredito que até certo nível é tolerável, o resultado de evita-lo a **todo custo** pode ser ainda pior.
+## Como evitar
+
+Estamos sempre querendo prever o futuro, acrescente boas intenções e uma pitada de sofisticação técnica e temos o tempero ideal para criarmos soluções para problemas que não existem.
+
+Pelo que notei isso ocorre com frequência em pessoas que estão entre o junior e o pleno, geralmente elas querem mostrar que estão a frente tecnicamente.
+
+Outro terreno fértil é excesso de tempo, quanto mais tempo tivermos mais iremos labidar nosso código, tão importante quanto saber refatorar é saber a hora de parar.
+
+Por fim isso também ocorre com pessoas que simplesmente não querem ler o código que já existe, você consegue identificar claramente a pessoa que sempre está escrevendo algo do zero.
+
+Não faça isso! O seu _eu do futuro_ e a sua equipe irão de agradecer por manter o código simples.
