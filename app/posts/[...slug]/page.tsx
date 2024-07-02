@@ -62,7 +62,7 @@ export default async function PostPage({ params }: PostProps) {
           post.tags.map((t, i) => (
             <span
               key={`tag-post-${i}`}
-              className="text-xs font-semibold text-pink-500 bg-slate-200 rounded-md  w-fit h-fit p-2 dark:text-slate-200 dark:bg-purple-800"
+              className="text-xs font-semibold text-pink-500 bg-slate-200 rounded-sm  w-fit h-fit p-2 dark:text-slate-200 dark:bg-purple-800"
             >
               {t}
             </span>
