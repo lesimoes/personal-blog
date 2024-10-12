@@ -30,6 +30,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <nav className="ml-auto text-sm font-medium space-x-6">
                   <Link href="/">Home</Link>
                   <Link href="/about">Sobre</Link>
+                  <Link href="https://nuaitech.substack.com/" target="_blank">
+                    Substack
+                  </Link>
+                  <Link href="https://nuai.com.br" target="_blank">
+                    Nuai
+                  </Link>
+                  <Link href="/linktree">Links</Link>
                 </nav>
               </div>
             </header>
